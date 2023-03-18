@@ -1,0 +1,4 @@
+*.log
+*.cmake
+src/CMakeFiles/
+src/CMakeCache.txt
