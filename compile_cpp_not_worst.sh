@@ -1,4 +1,7 @@
 #!/bin/sh
-cd ./cpp_not_worst
-cmake .
+cd ./src
+rm -rf build
+mkdir build
+cd build
+cmake ../
 make
