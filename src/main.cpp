@@ -1,9 +1,13 @@
+#include "DataStruct.cpp"
 #include "action.cpp"
 #include <fstream>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 fstream fout("status.log", ios::out);
+vector<WorkStation> workStation;
+vector<Robot> robot;
 
 bool readUntilOK() {
     char line[1024];
@@ -17,8 +21,36 @@ bool readUntilOK() {
     return false;
 }
 
+bool readMap() { //δ����
+    char line[1024];
+    int x, y;
+    char c;
+    for (y = 100; y >= 0; y--) {
+        for (x = 0; x < 101; x++) {
+            cin >> c;
+            if (c >= '1' || c <= '9') {
+                workStation.push_back(WorkStation((c - '0'), x * 0.5 - 0.25,
+                                                  y * 0.5 - 0.25, -1, 0, 0));
+            }
+            if (c == 'A') {
+                robot.push_back(Robot(-1, 0, 0, 0, 0, 0, 0, 0, x * 0.5 - 0.25,
+                                      y * 0.5 - 0.25));
+            }
+            if (c == 'O') {
+                cin >> c;
+                if (c == 'K') {
+                    fout << "OK" << endl;
+                    return true;
+                }
+            }
+            fout << c;
+        }
+    }
+    return false;
+}
+
 int main() {
-    readUntilOK();
+    readMap();
     puts("OK");
     fflush(stdout);
     int frameID;
