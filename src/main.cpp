@@ -1,13 +1,30 @@
-#include "DataStruct.cpp"
-#include "Instructions.h"
+#define _USE_MATH_DEFINES
+#include <iostream>
+#include <string>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <queue>
+#include <math.h>
+#include "DataStruct.cpp"
 using namespace std;
 
+
 fstream fout("status.log", ios::out);
-vector<WorkStation> workStation;
-vector<Robot> robot;
+stringstream ss;
+extern vector<WorkStation>workStation;
+extern vector<Robot>robot;
+
+//vector<WorkStation> priority_workStation;
+queue<RobotOrder> orderQueue[4];
+
+
+int frameID;
+int money;
+extern int workStationNum;
+
+
 
 bool readUntilOK() {
     char line[1024];
@@ -21,7 +38,8 @@ bool readUntilOK() {
     return false;
 }
 
-bool readMap() { //δ����
+
+bool readMap() {//never test
     char line[1024];
     int x, y;
     char c;
@@ -29,8 +47,7 @@ bool readMap() { //δ����
         for (x = 0; x < 101; x++) {
             cin >> c;
             if (c >= '1' || c <= '9') {
-                workStation.push_back(WorkStation((c - '0'), x * 0.5 - 0.25,
-                                                  y * 0.5 - 0.25, -1, 0, 0));
+                workStation.push_back(WorkStation(c-'0', x * 0.5 - 0.25, y * 0.5 - 0.25, -1, 0, 0));
             }
             if (c == 'A') {
                 robot.push_back(Robot(-1, 0, 0, 0, 0, 0, 0, 0, x * 0.5 - 0.25,
@@ -48,6 +65,8 @@ bool readMap() { //δ����
     }
     return false;
 }
+
+
 
 int main() {
     readMap();

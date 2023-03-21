@@ -63,3 +63,30 @@ public:
 
 };
 
+
+#define forward 0
+#define rotate 1
+#define buy 2
+#define sell 3
+#define destroy 4
+struct RobotOrder {
+	int orderNum;
+	int robotID;
+	float arg;
+public:
+	RobotOrder(int orderNum, int robotID, float arg) {
+		this->orderNum = orderNum;
+		this->robotID = robotID;
+		this->arg = arg;
+	}
+};
+
+struct MaterialPrice {
+	int buyPrice;
+	int sellPrice;
+public:
+	MaterialPrice(int buyPrice, int sellPrice) {
+		this->buyPrice = buyPrice;
+		this->sellPrice = sellPrice;
+	}
+};
