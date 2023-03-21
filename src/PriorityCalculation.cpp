@@ -57,7 +57,7 @@ double SellPriceCalcu_no_Crash(int oriSellPrice, int frameNum) {
 	return oriSellPrice * minRate;
 }
 
-double ProfitCalcu_A2B(WorkStation A, WorkStation B, int material) {
+double ProfitCalcu_A2B_StraightLine(WorkStation A, WorkStation B, int material) {
 	int oriBuyPrice = materialPrice[material].buyPrice;
 	int oriSellPrice = materialPrice[material].sellPrice;
 	double distance = DistanceCalcu(A.x_pos, A.y_pos, B.x_pos, B.y_pos);
