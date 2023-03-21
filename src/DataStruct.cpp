@@ -69,23 +69,23 @@ public:
 #define buy 2
 #define sell 3
 #define destroy 4
-struct robotOrder {
+struct RobotOrder {
 	int orderNum;
 	int robotID;
 	float arg;
 public:
-	robotOrder(int orderNum, int robotID, float arg) {
+	RobotOrder(int orderNum, int robotID, float arg) {
 		this->orderNum = orderNum;
 		this->robotID = robotID;
 		this->arg = arg;
 	}
 };
 
-struct materialPrice {
+struct MaterialPrice {
 	int buyPrice;
 	int sellPrice;
 public:
-	materialPrice(int buyPrice, int sellPrice) {
+	MaterialPrice(int buyPrice, int sellPrice) {
 		this->buyPrice = buyPrice;
 		this->sellPrice = sellPrice;
 	}

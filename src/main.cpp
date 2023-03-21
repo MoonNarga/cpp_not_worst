@@ -12,19 +12,17 @@ using namespace std;
 
 fstream fout("status.log", ios::out);
 stringstream ss;
-vector<WorkStation>workStation;
-vector<Robot>robot;
+extern vector<WorkStation>workStation;
+extern vector<Robot>robot;
 
 //vector<WorkStation> priority_workStation;
-queue<robotOrder> orderQueue[4];
+queue<RobotOrder> orderQueue[4];
 
-materialPrice Price[8];//begin from index 1
 
 int frameID;
 int money;
-int workStationNum;
-double emptyWeight = 0.45 * 0.45 * M_PI * 20;
-double loadingWeight = 0.53 * 0.53 * M_PI * 20;
+extern int workStationNum;
+
 
 
 bool readUntilOK() {
@@ -68,16 +66,7 @@ bool readMap() {//never test
     return false;
 }
 
-bool init() {
-    Price[1].buyPrice = 3000, Price[1].sellPrice = 6000;
-    Price[2].buyPrice = 4400, Price[2].sellPrice = 7600;
-    Price[3].buyPrice = 5800, Price[3].sellPrice = 9200;
-    Price[4].buyPrice = 15400, Price[4].sellPrice = 22500;
-    Price[5].buyPrice = 17200, Price[5].sellPrice = 25000;
-    Price[6].buyPrice = 19200, Price[6].sellPrice = 27500;
-    Price[7].buyPrice = 76000, Price[7].sellPrice = 105000;
 
-}
 
 int main() {
     readMap();
