@@ -1,5 +1,5 @@
 #include "DataStruct.cpp"
-#include "action.cpp"
+#include "Instructions.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
