@@ -80,3 +80,13 @@ public:
 		this->arg = arg;
 	}
 };
+
+struct materialPrice {
+	int buyPrice;
+	int sellPrice;
+public:
+	materialPrice(int buyPrice, int sellPrice) {
+		this->buyPrice = buyPrice;
+		this->sellPrice = sellPrice;
+	}
+};
