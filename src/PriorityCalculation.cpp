@@ -44,8 +44,8 @@ int Path_FrameNumCalcu(double distance,bool loading) {
 	double acc = maxForce / weight;							//F=ma
 	double speedUpTime = maxSpeed / acc;							//v=at
 	double speedUpDistance = acc * pow(speedUpTime, 2) / 2;			//S=at^2/2
-	if (distance < speedUpDistance) return sqrt(2 * distance / acc) / FramePerSecond;	//S=at^2/2
-	else return ((distance - speedUpDistance) / maxSpeed + speedUpTime) / FramePerSecond;
+	if (distance < speedUpDistance) return sqrt(2 * distance / acc) * FramePerSecond;	//S=at^2/2
+	else return ((distance - speedUpDistance) / maxSpeed + speedUpTime) * FramePerSecond;
 }
 
 double SellPriceCalcu_no_Crash(int oriSellPrice, int frameNum) {
