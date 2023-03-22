@@ -20,11 +20,13 @@ struct WorkStation {
 	//新增变量
 	//对于1-3 material全0
 	//对于4-6 分别对原料数组进行排序
-	vector<DirectionDistance> material[8];//index [1,6]存原料台 index[self]存目标台排序 用sort by totalProfit/totalFrame
+	vector<DirectionDistance> material_vector[10];//index [1,6]存原料台 index[self]存目标台排序 用sort by totalProfit/totalFrame
 	DirectionDistance sellStation;//存售卖台，该台只会是最近的台子
 	int materialFrame;//存 取原料总帧数（最优）
+	int productFrame;//存 生产原料总帧数
 	double materialProfit;//存 生产原料总利润（最优）
-	double pathProfit;//=用 原料总帧数+售卖总帧数 和 原料总利润+售卖利润 算
+	double pathProfit;//=用 原料总帧数+售卖总帧数+生产原料总帧数 和 原料总利润+售卖利润 算
+	double pathProfitRate;//总线路利润率
 public:
 	WorkStation(int type, float x_pos, float y_pos, int status, int material, int prduction) {
 		this->type = type;

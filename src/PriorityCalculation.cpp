@@ -5,6 +5,9 @@
 #include <algorithm>
 #include "DataStruct.cpp"
 #define FramePerSecond 50
+#define Frame123 50
+#define Frame456 500
+#define Frame7 1000
 using namespace std;
 
 //all never test
@@ -71,35 +74,103 @@ double ProfitCalcu_A2B_StraightLine(double distance,int frameNum, int material) 
 }
 
 
-void sellStation_sort(DirectionDistance* A,DirectionDistance* B) {
+void DirectionDistance_sort(DirectionDistance* A,DirectionDistance* B) {
 	return A->profitRate > B->profitRate;
 
 }
 
+int GetBestFrame(int workStationID) {
+	WorkStation station = workStation[workStationID];
+	if (station.type == 4)
+		return station.material_vector[1][0].directFrame + station.material_vector[2][0].directFrame;
+	else if (station.type == 5)
+		return station.material_vector[1][0].directFrame + station.material_vector[3][0].directFrame;
+	else if (station.type == 6)
+		return station.material_vector[2][0].directFrame + station.material_vector[3][0].directFrame;
+}
+
+int GetBestProfit(int workStationID) {
+	WorkStation station = workStation[workStationID];
+	if (station.type == 4)
+		return station.material_vector[1][0].profit + station.material_vector[2][0].profit;
+	else if (station.type == 5)
+		return station.material_vector[1][0].profit + station.material_vector[3][0].profit;
+	else if (station.type == 6)
+		return station.material_vector[2][0].profit + station.material_vector[3][0].profit;
+}
+
+void A2X_Material_sort(int workStationID, int directType) {
+	DirectionDistance directStation;
+	int MaterialType=directType;
+	if (directType > 7)MaterialType = workStation[workStationID].type;
+	int Sell_type;
+	for (Sell_type = 0;Sell_type < workStation_type[directType].size();Sell_type++) {//该工作台对每一个售卖台的计算
+		directStation.directID = workStation_type[directType][Sell_type];
+		directStation.distance = DistanceCalcu(workStation[workStationID], workStation[directStation.directID]);
+		directStation.directFrame = Path_FrameNumCalcu(directStation.distance, true);
+		if (directType >= 4 && directType <= 6)directStation.totalFrame = GetBestFrame(directStation.directID) + directStation.directFrame;
+		else directStation.totalFrame = directStation.directFrame;
+
+		
+		directStation.profit = ProfitCalcu_A2B_StraightLine(directStation.distance, directStation.directFrame, MaterialType);
+		if (directType >= 4 && directType <= 6)directStation.totalProfit = GetBestProfit(directStation.directID) + directStation.profit;
+		else directStation.totalProfit = directStation.profit;
+		
+		directStation.profitRate = directStation.totalProfit / directStation.totalFrame;
+		workStation[workStationID].material_vector[directType].push_back(directStation);
+
+
+	}
+	//售卖台排序
+	sort(workStation[workStationID].material_vector[directType].begin(), workStation[workStationID].material_vector[directType].end(), DirectionDistance_sort);
+}
+
+void MaterialBestCalcu(int StationID) {
+	int Material_type = workStation[StationID].type;
+	int Mx = 0;
+	int My = 0;
+	if (Material_type == 4) {
+		Mx = 1;My = 2;
+	}
+	if (Material_type == 5) {
+		Mx = 1;My = 3;
+	}
+	if (Material_type == 6) {
+		Mx = 2;My = 3;
+	}
+
+	A2X_Material_sort(StationID, Mx);
+	A2X_Material_sort(StationID, My);
+	workStation[StationID].materialFrame = workStation[StationID].material_vector[Mx][0].totalFrame + workStation[StationID].material_vector[My][0].totalFrame + 2 * Frame123;
+	workStation[StationID].materialProfit= workStation[StationID].material_vector[Mx][0].totalProfit + workStation[StationID].material_vector[My][0].totalProfit;
+
+}
 
 void ProfitCalcu() {
 	int Material_type = 0;
 	int W_ID = 0;
 	int StationID = 0;
 	int Sell_type = 0;
-	DirectionDistance sellStation;
-	for (Material_type = 1;Material_type < 8;i++) {//对于每一类型的工作台
-		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//对于该类型的每一个工作台
+	
+	for (Material_type = 1;Material_type < 8;i++) {//对于每一类型
+		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//对于每一个工作台
 			StationID = workStation_type[Material_type][W_ID];
+			//先算到售卖台的最优解
+			A2X_Material_sort(StationID, 9);
+			if (Material_type == 7)A2X_Material_sort(StationID, 8);
 
-			for (Sell_type = 0;Sell_type < workStation_type[9].size();Sell_type++) {//该工作台对每一个售卖台的计算
-							sellStation.directID = workStation_type[9][Sell_type];
-							sellStation.distance = DistanceCalcu(workStation[stationID], workStation[sellStation.directID]);
-							sellStation.directFrame = Path_FrameNumCalcu(sellStation.distance, true);
-							sellStation.profit = ProfitCalcu_A2B_StraightLine(sellStation.distance,sellStation.directFrame,Material_type);
-							sellStation.profitRate = sellStation.profit / sellStation.directFrame;
-							workStation[StationID].material[Material_type].push_back(sellStation);
-
-
-						}
-			//售卖台排序
-			sort(workStation[StationID].material[Material_type].begin(), workStation[StationID].material[Material_type].end(), sellStation_sort);
-
+			//算路径最优解
+			if (Material_type <= 3) {
+				workStation[StationID].pathProfit = workStation[StationID].material_vector[Material_type][0].profit;
+				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / Frame123;
+			}
+			else if (Material_type <= 6) {
+				MaterialBestCalcu(StationID);
+				workStation[StationID].pathProfit = workStation[StationID].materialProfit + workStation[StationID].material_vector[Material_type][0].profit;
+				workStation[StationID].productFrame = workStation[StationID].materialFrame + workStation[StationID].material_vector[Material_type][0].directFrame + Frame456;
+				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / workStation[StationID].productFrame;
+			}
+		
 
 		}
 		
