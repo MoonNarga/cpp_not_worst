@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <algorithm>
 #include "DataStruct.cpp"
 #define FramePerSecond 50
 using namespace std;
@@ -26,6 +27,10 @@ bool initPrice() {
 	materialPrice[5].buyPrice = 17200, Price[5].sellPrice = 25000;
 	materialPrice[6].buyPrice = 19200, Price[6].sellPrice = 27500;
 	materialPrice[7].buyPrice = 76000, Price[7].sellPrice = 105000;
+}
+
+double DstanceCalcu(WorkStation A, WorkStation B) {
+	return sqrt(pow(A.x_pos - B.x_pos, 2) + pow(A.y_pos - B.y_pos, 2))
 }
 
 double DistanceCalcu(float Ax, float Ay, float Bx, float By) {
@@ -57,10 +62,61 @@ double SellPriceCalcu_no_Crash(int oriSellPrice, int frameNum) {
 	return oriSellPrice * minRate;
 }
 
-double ProfitCalcu_A2B_StraightLine(WorkStation A, WorkStation B, int material) {
+double ProfitCalcu_A2B_StraightLine(double distance,int frameNum, int material) {
 	int oriBuyPrice = materialPrice[material].buyPrice;
 	int oriSellPrice = materialPrice[material].sellPrice;
-	double distance = DistanceCalcu(A.x_pos, A.y_pos, B.x_pos, B.y_pos);
-	int frameNum = path_FrameNumCalcu(distance, true);
+	//double distance = DistanceCalcu(A.x_pos, A.y_pos, B.x_pos, B.y_pos);
+	//int frameNum = path_FrameNumCalcu(distance, true);
 	return SellPriceCalcu_no_Crash(oriSellPrice, frameNum) - oriBuyPrice;
 }
+
+
+void sellStation_sort(DirectionDistance* A,DirectionDistance* B) {
+	return A->profitRate > B->profitRate;
+
+}
+
+
+void ProfitCalcu() {
+	int Material_type = 0;
+	int W_ID = 0;
+	int StationID = 0;
+	int Sell_type = 0;
+	DirectionDistance sellStation;
+	for (Material_type = 1;Material_type < 8;i++) {//对于每一类型的工作台
+		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//对于该类型的每一个工作台
+			StationID = workStation_type[Material_type][W_ID];
+
+			for (Sell_type = 0;Sell_type < workStation_type[9].size();Sell_type++) {//该工作台对每一个售卖台的计算
+							sellStation.directID = workStation_type[9][Sell_type];
+							sellStation.distance = DistanceCalcu(workStation[stationID], workStation[sellStation.directID]);
+							sellStation.directFrame = Path_FrameNumCalcu(sellStation.distance, true);
+							sellStation.profit = ProfitCalcu_A2B_StraightLine(sellStation.distance,sellStation.directFrame,Material_type);
+							sellStation.profitRate = sellStation.profit / sellStation.directFrame;
+							workStation[StationID].material[Material_type].push_back(sellStation);
+
+
+						}
+			//售卖台排序
+			sort(workStation[StationID].material[Material_type].begin(), workStation[StationID].material[Material_type].end(), sellStation_sort);
+
+
+		}
+		
+	}
+}
+
+
+void PriorityCalcu() {
+
+}
+
+
+
+
+
+
+
+
+
+
