@@ -10,6 +10,9 @@
 #define Frame7 1000
 using namespace std;
 
+
+//ä¼šå˜æˆä¹±ç å—
+
 //all never test
 extern MaterialPrice materialPrice[8];//begin from index 1
 
@@ -22,25 +25,28 @@ extern double minRotate = -M_PI;
 extern double maxForce = 250;
 extern double maxMomentForce = 50;
 
+
+
+
 bool initPrice() {
-	materialPrice[1].buyPrice = 3000, Price[1].sellPrice = 6000;
-	materialPrice[2].buyPrice = 4400, Price[2].sellPrice = 7600;
-	materialPrice[3].buyPrice = 5800, Price[3].sellPrice = 9200;
-	materialPrice[4].buyPrice = 15400, Price[4].sellPrice = 22500;
-	materialPrice[5].buyPrice = 17200, Price[5].sellPrice = 25000;
-	materialPrice[6].buyPrice = 19200, Price[6].sellPrice = 27500;
-	materialPrice[7].buyPrice = 76000, Price[7].sellPrice = 105000;
+	materialPrice[1].buyPrice = 3000, materialPrice[1].sellPrice = 6000;
+	materialPrice[2].buyPrice = 4400, materialPrice[2].sellPrice = 7600;
+	materialPrice[3].buyPrice = 5800, materialPrice[3].sellPrice = 9200;
+	materialPrice[4].buyPrice = 15400, materialPrice[4].sellPrice = 22500;
+	materialPrice[5].buyPrice = 17200, materialPrice[5].sellPrice = 25000;
+	materialPrice[6].buyPrice = 19200, materialPrice[6].sellPrice = 27500;
+	materialPrice[7].buyPrice = 76000, materialPrice[7].sellPrice = 105000;
 }
 
-double DstanceCalcu(WorkStation A, WorkStation B) {
-	return sqrt(pow(A.x_pos - B.x_pos, 2) + pow(A.y_pos - B.y_pos, 2))
+double DistanceCalcu(WorkStation A, WorkStation B) {
+	return sqrt(pow(A.x_pos - B.x_pos, 2) + pow(A.y_pos - B.y_pos, 2));
 }
 
-double DistanceCalcu(float Ax, float Ay, float Bx, float By) {
-	return sqrt(pow(Ax-Bx,2)+ pow(Ay - By, 2))
-}
+// double DistanceCalcu(float Ax, float Ay, float Bx, float By) {
+// 	return sqrt(pow(Ax-Bx,2)+ pow(Ay - By, 2))
+// }
 
-//Only Speed Up£¬No Down 
+//Only Speed Upï¿½ï¿½No Down 
 int Path_FrameNumCalcu(double distance,bool loading) {
 	double weight;
 	if (loading == true) {
@@ -74,7 +80,7 @@ double ProfitCalcu_A2B_StraightLine(double distance,int frameNum, int material) 
 }
 
 
-void DirectionDistance_sort(DirectionDistance* A,DirectionDistance* B) {
+bool DirectionDistance_sort(DirectionDistance* A,DirectionDistance* B) {
 	return A->profitRate > B->profitRate;
 
 }
@@ -104,7 +110,7 @@ void A2X_Material_sort(int workStationID, int directType) {
 	int MaterialType=directType;
 	if (directType > 7)MaterialType = workStation[workStationID].type;
 	int Sell_type;
-	for (Sell_type = 0;Sell_type < workStation_type[directType].size();Sell_type++) {//¸Ã¹¤×÷Ì¨¶ÔÃ¿Ò»¸öÊÛÂôÌ¨µÄ¼ÆËã
+	for (Sell_type = 0;Sell_type < workStation_type[directType].size();Sell_type++) {//ï¿½Ã¹ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½Ä¼ï¿½ï¿½ï¿½
 		directStation.directID = workStation_type[directType][Sell_type];
 		directStation.distance = DistanceCalcu(workStation[workStationID], workStation[directStation.directID]);
 		directStation.directFrame = Path_FrameNumCalcu(directStation.distance, true);
@@ -121,7 +127,7 @@ void A2X_Material_sort(int workStationID, int directType) {
 
 
 	}
-	//ÊÛÂôÌ¨ÅÅÐò
+	//ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½
 	sort(workStation[workStationID].material_vector[directType].begin(), workStation[workStationID].material_vector[directType].end(), DirectionDistance_sort);
 }
 
@@ -152,14 +158,14 @@ void ProfitCalcu() {
 	int StationID = 0;
 	int Sell_type = 0;
 	
-	for (Material_type = 1;Material_type < 8;i++) {//¶ÔÓÚÃ¿Ò»ÀàÐÍ
-		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//¶ÔÓÚÃ¿Ò»¸ö¹¤×÷Ì¨
+	for (Material_type = 1;Material_type < 8;Material_type++) {//ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½
+		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨
 			StationID = workStation_type[Material_type][W_ID];
-			//ÏÈËãµ½ÊÛÂôÌ¨µÄ×îÓÅ½â
+			//ï¿½ï¿½ï¿½ãµ½ï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½ï¿½Å½ï¿½
 			A2X_Material_sort(StationID, 9);
 			if (Material_type == 7)A2X_Material_sort(StationID, 8);
 
-			//ËãÂ·¾¶×îÓÅ½â
+			//ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Å½ï¿½
 			if (Material_type <= 3) {
 				workStation[StationID].pathProfit = workStation[StationID].material_vector[Material_type][0].profit;
 				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / Frame123;
