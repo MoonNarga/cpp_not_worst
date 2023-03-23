@@ -1,5 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "DataStruct.cpp"
+#include "DataStruct.h"
 #include "Robot.h"
 #include <fstream>
 #include <iostream>
@@ -12,18 +12,18 @@ using namespace std;
 
 // fstream fout("status.log", ios::out);
 // stringstream ss;
-// extern vector<WorkStation>workStation;//index [0,49]
 // extern vector<Robot>robot;
 //
 ////vector<WorkStation> priority_workStation;
 //
-// extern vector<int> workStation_type[10];//index [1,9],只存ID
 // queue<RobotOrder> orderQueue[4];
-//
-//
 // int frameID;
 // int money;
 // extern int workStationNum;
+
+vector<WorkStation> workStation; // index [0,49]
+vector<Robot> robots;
+vector<int> workStation_type[10]; // index [1,9],只存ID
 
 bool readUntilOK() {
     char line[1024];
@@ -45,12 +45,13 @@ bool readMap() { // never test
         for (x = 0; x < 101; x++) {
             cin >> c;
             if (c >= '1' || c <= '9') {
-                workStation.push_back(WorkStation(c-'0', x * 0.5 - 0.25, y * 0.5 - 0.25, -1, 0, 0));
-                workStation_type[c - '0'].push_back(workStation.size() - 1);//最新一位的ID存入type
+                workStation.push_back(WorkStation(c - '0', x * 0.5 - 0.25,
+                                                  y * 0.5 - 0.25, -1, 0, 0));
+                workStation_type[c - '0'].push_back(workStation.size() -
+                                                    1); //最新一位的ID存入type
             }
             if (c == 'A') {
-                robot.push_back(Robot(-1, 0, 0, 0, 0, 0, 0, 0, x * 0.5 - 0.25,
-                                      y * 0.5 - 0.25));
+                robots.push_back(Robot(x * 0.5 - 0.25, y * 0.5 - 0.25));
             }
             if (c == 'O') {
                 cin >> c;
