@@ -1,24 +1,20 @@
 #include <cmath>
-#include <iostream>
-#include <string>
 #include <deque>
+#include <iostream>
 #include <pthread.h>
+#include <string>
 
 using namespace std;
 
-class Instructions
-{
-private:
-    /* data */
-public:
-    Instructions(string str, );
-    ~Instructions();
+class Behaviour {
+  private:
+    int behaviour, wordStationID, priority;
+
+  public:
+    Behaviour(int beha, int id, int prior) {
+        this->behaviour = beha;
+        this->wordStationID = id;
+        this->priority = prior;
+    };
+    ~Behaviour(){};
 };
-
-Instructions::Instructions(/* args */)
-{
-}
-
-Instructions::~Instructions()
-{
-}
