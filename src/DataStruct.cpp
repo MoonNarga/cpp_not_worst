@@ -17,16 +17,16 @@ struct WorkStation {
 	int material;
 	int production;
 	
-	//ĞÂÔö±äÁ¿
-	//¶ÔÓÚ1-3 materialÈ«0
-	//¶ÔÓÚ4-6 ·Ö±ğ¶ÔÔ­ÁÏÊı×é½øĞĞÅÅĞò
-	vector<DirectionDistance> material_vector[10];//index [1,6]´æÔ­ÁÏÌ¨ index[self]´æÄ¿±êÌ¨ÅÅĞò ÓÃsort by totalProfit/totalFrame
-	DirectionDistance sellStation;//´æÊÛÂôÌ¨£¬¸ÃÌ¨Ö»»áÊÇ×î½üµÄÌ¨×Ó
-	int materialFrame;//´æ È¡Ô­ÁÏ×ÜÖ¡Êı£¨×îÓÅ£©
-	int productFrame;//´æ Éú²úÔ­ÁÏ×ÜÖ¡Êı
-	double materialProfit;//´æ Éú²úÔ­ÁÏ×ÜÀûÈó£¨×îÓÅ£©
-	double pathProfit;//=ÓÃ Ô­ÁÏ×ÜÖ¡Êı+ÊÛÂô×ÜÖ¡Êı+Éú²úÔ­ÁÏ×ÜÖ¡Êı ºÍ Ô­ÁÏ×ÜÀûÈó+ÊÛÂôÀûÈó Ëã
-	double pathProfitRate;//×ÜÏßÂ·ÀûÈóÂÊ
+	//æ–°å¢å˜é‡
+	//å¯¹äº1-3 materialå…¨0
+	//å¯¹äº4-6 åˆ†åˆ«å¯¹åŸæ–™æ•°ç»„è¿›è¡Œæ’åº
+	vector<DirectionDistance> material_vector[10];//index [1,6]å­˜åŸæ–™å° index[self]å­˜ç›®æ ‡å°æ’åº ç”¨sort by totalProfit/totalFrame
+	DirectionDistance sellStation;//å­˜å”®å–å°ï¼Œè¯¥å°åªä¼šæ˜¯æœ€è¿‘çš„å°å­
+	int materialFrame;//å­˜ å–åŸæ–™æ€»å¸§æ•°ï¼ˆæœ€ä¼˜ï¼‰
+	int productFrame;//å­˜ ç”Ÿäº§åŸæ–™æ€»å¸§æ•°
+	double materialProfit;//å­˜ ç”Ÿäº§åŸæ–™æ€»åˆ©æ¶¦ï¼ˆæœ€ä¼˜ï¼‰
+	double pathProfit;//=ç”¨ åŸæ–™æ€»å¸§æ•°+å”®å–æ€»å¸§æ•°+ç”Ÿäº§åŸæ–™æ€»å¸§æ•° å’Œ åŸæ–™æ€»åˆ©æ¶¦+å”®å–åˆ©æ¶¦ ç®—
+	double pathProfitRate;//æ€»çº¿è·¯åˆ©æ¶¦ç‡
 public:
 	WorkStation(int type, float x_pos, float y_pos, int status, int material, int prduction) {
 		this->type = type;
@@ -109,13 +109,13 @@ public:
 
 
 struct DirectionDistance {
-	int directID;	//´æÄ¿±êÌ¨ID
-	double distance;//´æÄ¿±ê¾àÀë
-	int directFrame;//´æµ½´ïÖ¡Êı
-	int totalFrame;//µ½´ïÖ¡Êı+È¡Ô­ÁÏ×îÓÅ×ÜÖ¡Êı
-	double profit;  //´æ¸Ã¶ÌÏßÂ·ÀûÈó
-	double totalProfit;//´æ¸Ã¶ÌÏßÂ·ÀûÈó+È¡Ô­ÁÏ×îÓÅ×ÜÀûÈó
-	double profitRate;//ÀûÈóÂÊ perFrame
+	int directID;	//å­˜ç›®æ ‡å°ID
+	double distance;//å­˜ç›®æ ‡è·ç¦»
+	int directFrame;//å­˜åˆ°è¾¾å¸§æ•°
+	int totalFrame;//åˆ°è¾¾å¸§æ•°+å–åŸæ–™æœ€ä¼˜æ€»å¸§æ•°
+	double profit;  //å­˜è¯¥çŸ­çº¿è·¯åˆ©æ¶¦
+	double totalProfit;//å­˜è¯¥çŸ­çº¿è·¯åˆ©æ¶¦+å–åŸæ–™æœ€ä¼˜æ€»åˆ©æ¶¦
+	double profitRate;//åˆ©æ¶¦ç‡ perFrame
 
 
 };
@@ -127,7 +127,7 @@ extern vector<WorkStation>workStation;//index [0,49]
 extern vector<Robot>robot;
 
 //vector<WorkStation> priority_workStation;
-extern vector<int> workStation_type[10];//index [1,9],Ö»´æID
+extern vector<int> workStation_type[10];//index [1,9],åªå­˜ID
 queue<RobotOrder> orderQueue[4];
 
 int frameID;

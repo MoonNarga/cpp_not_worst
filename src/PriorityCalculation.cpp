@@ -110,7 +110,7 @@ void A2X_Material_sort(int workStationID, int directType) {
 	int MaterialType=directType;
 	if (directType > 7)MaterialType = workStation[workStationID].type;
 	int Sell_type;
-	for (Sell_type = 0;Sell_type < workStation_type[directType].size();Sell_type++) {//�ù���̨��ÿһ������̨�ļ���
+	for (Sell_type = 0;Sell_type < workStation_type[directType].size();Sell_type++) {//该工作台对每一个售卖台的计算
 		directStation.directID = workStation_type[directType][Sell_type];
 		directStation.distance = DistanceCalcu(workStation[workStationID], workStation[directStation.directID]);
 		directStation.directFrame = Path_FrameNumCalcu(directStation.distance, true);
@@ -127,7 +127,7 @@ void A2X_Material_sort(int workStationID, int directType) {
 
 
 	}
-	//����̨����
+	//售卖台排序
 	sort(workStation[workStationID].material_vector[directType].begin(), workStation[workStationID].material_vector[directType].end(), DirectionDistance_sort);
 }
 
@@ -158,14 +158,14 @@ void ProfitCalcu() {
 	int StationID = 0;
 	int Sell_type = 0;
 	
-	for (Material_type = 1;Material_type < 8;Material_type++) {//����ÿһ����
-		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//����ÿһ������̨
+	for (Material_type = 1;Material_type < 8;Material_type++) {//对于每一类型
+		for (W_ID = 0;W_ID < workStation_type[Material_type].size();W_ID++) {//对于每一个工作台
 			StationID = workStation_type[Material_type][W_ID];
-			//���㵽����̨�����Ž�
+			//先算到售卖台的最优解
 			A2X_Material_sort(StationID, 9);
 			if (Material_type == 7)A2X_Material_sort(StationID, 8);
 
-			//��·�����Ž�
+			//算路径最优解
 			if (Material_type <= 3) {
 				workStation[StationID].pathProfit = workStation[StationID].material_vector[Material_type][0].profit;
 				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / Frame123;

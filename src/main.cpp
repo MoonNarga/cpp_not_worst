@@ -17,7 +17,7 @@ using namespace std;
 //
 ////vector<WorkStation> priority_workStation;
 //
-//extern vector<int> workStation_type[10];//index [1,9],ֻ��ID
+//extern vector<int> workStation_type[10];//index [1,9],只存ID
 //queue<RobotOrder> orderQueue[4];
 //
 //
@@ -49,7 +49,7 @@ bool readMap() {//never test
             cin >> c;
             if (c >= '1' || c <= '9') {
                 workStation.push_back(WorkStation(c-'0', x * 0.5 - 0.25, y * 0.5 - 0.25, -1, 0, 0));
-                workStation_type[c - '0'].push_back(workStation.size() - 1);
+                workStation_type[c - '0'].push_back(workStation.size() - 1);//最新一位的ID存入type
             }
             if (c == 'A') {
                 robot.push_back(Robot(-1, 0, 0, 0, 0, 0, 0, 0, x * 0.5 - 0.25, y * 0.5 - 0.25));
