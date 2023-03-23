@@ -17,6 +17,16 @@ struct WorkStation {
 	int material;
 	int production;
 	
+	//新增变量
+	//对于1-3 material全0
+	//对于4-6 分别对原料数组进行排序
+	vector<DirectionDistance> material_vector[10];//index [1,6]存原料台 index[self]存目标台排序 用sort by totalProfit/totalFrame
+	DirectionDistance sellStation;//存售卖台，该台只会是最近的台子
+	int materialFrame;//存 取原料总帧数（最优）
+	int productFrame;//存 生产原料总帧数
+	double materialProfit;//存 生产原料总利润（最优）
+	double pathProfit;//=用 原料总帧数+售卖总帧数+生产原料总帧数 和 原料总利润+售卖利润 算
+	double pathProfitRate;//总线路利润率
 	//????????
 	//????1-3 material?0
 	//????4-6 ??????????????????
@@ -52,13 +62,13 @@ public:
 
 
 struct DirectionDistance {
-	int directID;	//??????ID
-	double distance;//????????
-	int directFrame;//?��?????
-	int totalFrame;//???????+?????????????
-	double profit;  //??????��????
-	double totalProfit;//??????��????+??????????????
-	double profitRate;//?????? perFrame
+	int directID;	//存目标台ID
+	double distance;//存目标距离
+	int directFrame;//存到达帧数
+	int totalFrame;//到达帧数+取原料最优总帧数
+	double profit;  //存该短线路利润
+	double totalProfit;//存该短线路利润+取原料最优总利润
+	double profitRate;//利润率 perFrame
 
 
 };
@@ -70,7 +80,8 @@ extern vector<WorkStation>workStation;//index [0,49]
 extern vector<Robot>robot;
 
 //vector<WorkStation> priority_workStation;
-extern vector<int> workStation_type[10];//index [1,9],???ID
+extern vector<int> workStation_type[10];//index [1,9],只存ID
+queue<RobotOrder> orderQueue[4];
 
 int frameID;
 int money;
