@@ -24,6 +24,8 @@ using namespace std;
 vector<WorkStation> workStation; // index [0,49]
 vector<Robot> robots;
 vector<int> workStation_type[10]; // index [1,9],只存ID
+vector<int> PriorityStation;
+
 
 bool readUntilOK() {
     char line[1024];
@@ -41,11 +43,12 @@ bool readMap() { // never test
     char line[1024];
     int x, y;
     char c;
+    int id=1;
     for (y = 100; y >= 0; y--) {
         for (x = 0; x < 101; x++) {
             cin >> c;
             if (c >= '1' || c <= '9') {
-                workStation.push_back(WorkStation(c - '0', x * 0.5 - 0.25,
+                workStation.push_back(WorkStation(c - '0',id++, x * 0.5 - 0.25,
                                                   y * 0.5 - 0.25, -1, 0, 0));
                 workStation_type[c - '0'].push_back(workStation.size() -
                                                     1); //最新一位的ID存入type

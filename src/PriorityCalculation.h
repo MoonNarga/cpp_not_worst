@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "DataStruct.h"
 #include "const.h"
+#include "Instructions.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -214,10 +215,62 @@ void ProfitCalcu() {
     }
 }
 
-// bool(WorkStation A,WorkStation B){
-//     return 
-// }
+bool PrioritySort(WorkStation A,WorkStation B){
+    return A.pathProfitRate>B.pathProfitRate;
+}
 
-// void PriorityCalcu() {
+void PriorityCalcu() {
+    ProfitCalcu();
+    vector<WorkStation>stationSort(workStation);
+    sort(stationSort.begin(),stationSort.end(),PrioritySort);
+    for(auto i:stationSort){
+        PriorityStation.push_back(i.ID);
+    }
+}
 
-// }
+
+void SellOrder(int ID){    //？
+    
+    SellBeha.push(Behaviour(SELL,ID));
+
+}
+
+void PickOrder(int fromID,int toID){
+    PickBeha.push(Behaviour(BUY,fromID));
+    PickBeha.push(Behaviour(SELL,toID));
+}
+
+void GetMaterial(int fromID,int toID){
+    int Material_type = workStation[ID].type;
+    int Mx = 0;
+    int My = 0;
+    if (Material_type == 4) {
+        Mx = 1;
+        My = 2;
+    }
+    if (Material_type == 5) {
+        Mx = 1;
+        My = 3;
+    }
+    if (Material_type == 6) {
+        Mx = 2;
+        My = 3;
+    }
+
+}
+
+void GetWorkOrder(){
+    int i=0;
+    int ID=0;
+    int maxID=0;
+    int mat[7];
+    for(i=1;i<7;i++)
+        mat[i]=(workStation[ID].material>>(i-1))%2;//原料格状态 index【1,6】
+    for(i=0;i<PriorityStation.size()&&PickBeha.size()<20;i++){              //队列长度限定20
+        ID=PriorityStation[i];
+        if(workStation[ID].production)SellOrder(ID);
+        GetMaterial(ID);
+        
+
+    }
+}

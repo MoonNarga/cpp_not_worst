@@ -21,11 +21,14 @@ struct DirectionDistance {
 // data
 struct WorkStation {
     int type; //
+    int ID;
     double x_pos;
     double y_pos;
     int status;
     int material;
     int production;
+    int gettingMutex;
+    int SellMutex;
 
     //新增变量
     //对于1-3 material全0
@@ -42,9 +45,10 @@ struct WorkStation {
     double pathProfitRate; //总线路利润率
 
   public:
-    WorkStation(int type, double x_pos, double y_pos, int status, int material,
+    WorkStation(int type, int ID,double x_pos, double y_pos, int status, int material,
                 int prduction) {
         this->type = type;
+        this->ID=ID;
         this->x_pos = x_pos;
         this->y_pos = y_pos;
         this->status = status;
@@ -68,6 +72,8 @@ struct MaterialPrice {
 fstream fout("status.log", ios::out);
 stringstream ss;
 extern vector<WorkStation> workStation; // index [0,49]
+vector<int> PriorityStation;
+
 
 // vector<WorkStation> priority_workStation;
 extern vector<int> workStation_type[10]; // index [1,9],只存ID
