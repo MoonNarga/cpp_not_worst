@@ -46,7 +46,7 @@ double DistanceCalcu(WorkStation A, WorkStation B) {
 // 	return sqrt(pow(Ax-Bx,2)+ pow(Ay - By, 2))
 // }
 
-//Only Speed Up��No Down 
+//Only Speed Up No Down 
 int Path_FrameNumCalcu(double distance,bool loading) {
 	double weight;
 	if (loading == true) {
@@ -135,6 +135,7 @@ void MaterialBestCalcu(int StationID) {
 	int Material_type = workStation[StationID].type;
 	int Mx = 0;
 	int My = 0;
+	int Mz=0;
 	if (Material_type == 4) {
 		Mx = 1;My = 2;
 	}
@@ -144,11 +145,23 @@ void MaterialBestCalcu(int StationID) {
 	if (Material_type == 6) {
 		Mx = 2;My = 3;
 	}
-
-	A2X_Material_sort(StationID, Mx);
-	A2X_Material_sort(StationID, My);
-	workStation[StationID].materialFrame = workStation[StationID].material_vector[Mx][0].totalFrame + workStation[StationID].material_vector[My][0].totalFrame + 2 * Frame123;
-	workStation[StationID].materialProfit= workStation[StationID].material_vector[Mx][0].totalProfit + workStation[StationID].material_vector[My][0].totalProfit;
+	if (Material_type==7){
+		Mx = 4;My = 5;Mz=6;
+	}
+	if(Material_type>=4&&Material_type<=6){
+		A2X_Material_sort(StationID, Mx);
+		A2X_Material_sort(StationID, My);
+		workStation[StationID].materialFrame = workStation[StationID].material_vector[Mx][0].totalFrame + workStation[StationID].material_vector[My][0].totalFrame + 2 * Frame123;
+		workStation[StationID].materialProfit= workStation[StationID].material_vector[Mx][0].totalProfit + workStation[StationID].material_vector[My][0].totalProfit;
+	}
+	
+	else if(Material_type==7){
+		A2X_Material_sort(StationID, Mx);
+		A2X_Material_sort(StationID, My);
+		A2X_Material_sort(StationID, Mz);
+		workStation[StationID].materialFrame = workStation[StationID].material_vector[Mx][0].totalFrame + workStation[StationID].material_vector[My][0].totalFrame +workStation[StationID].material_vector[Mz][0].totalFrame + 3 * Frame456;
+		workStation[StationID].materialProfit= workStation[StationID].material_vector[Mx][0].totalProfit + workStation[StationID].material_vector[My][0].totalProfit+ workStation[StationID].material_vector[Mz][0].totalProfit;
+	}
 
 }
 
@@ -168,13 +181,20 @@ void ProfitCalcu() {
 			//算路径最优解
 			if (Material_type <= 3) {
 				workStation[StationID].pathProfit = workStation[StationID].material_vector[Material_type][0].profit;
-				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / Frame123;
+				workStation[StationID].pathFrame = workStation[StationID].material_vector[Material_type][0].directFrame+Frame123;
+				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / workStation[StationID].pathFrame;
 			}
-			else if (Material_type <= 6) {
-				MaterialBestCalcu(StationID);
+			else if (Material_type <= 7) {
+				MaterialBestCalcu(StationID);//算原料最优解
 				workStation[StationID].pathProfit = workStation[StationID].materialProfit + workStation[StationID].material_vector[Material_type][0].profit;
-				workStation[StationID].productFrame = workStation[StationID].materialFrame + workStation[StationID].material_vector[Material_type][0].directFrame + Frame456;
-				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / workStation[StationID].productFrame;
+				workStation[StationID].pathFrame = workStation[StationID].materialFrame + workStation[StationID].material_vector[Material_type][0].directFrame ;
+				if(Material_type!=7){
+					workStation[StationID].pathFrame+=Frame456;
+				}
+				else 
+					workStation[StationID].pathFrame+=Frame7;
+
+				workStation[StationID].pathProfitRate = workStation[StationID].pathProfit / workStation[StationID].pathFrame;
 			}
 		
 
