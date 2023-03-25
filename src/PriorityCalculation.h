@@ -17,6 +17,24 @@ using namespace std;
 // all never test
 MaterialPrice materialPrice[8]; // begin from index 1
 
+
+void PutsPriorityLog(){
+    fout<<"Priority Calculation Log:"<<endl;
+    int i=0;
+    for(i=0;i<workStationNum;i++){
+        fout<<workStation[i].type<<" "<<workStation[i].ID<<" "<<workStation[i].x_pos<<" "<<workStation[i].y_pos<<endl;
+        fout<<"status:"<<workStation[i].status<<endl;
+        fout<<"material"<<workStation[i].material<<endl;
+        fout<<"production:"<<workStation[i].production<<endl;
+        fout<<"gettingMutex:"<<workStation[i].gettingMutex<<endl;
+        fout<<"SellMutex:"<<workStation[i].SellMutex<<endl;
+        fout<<"pathProfitRate:"<<workStation[i].pathProfitRate<<endl<<endl;
+    }
+    fout<<"-----------------Log End------------------------"<<endl;
+
+}
+
+
 void initPrice() {
     materialPrice[1].buyPrice = 3000, materialPrice[1].sellPrice = 6000;
     materialPrice[2].buyPrice = 4400, materialPrice[2].sellPrice = 7600;

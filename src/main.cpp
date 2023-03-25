@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "DataStruct.h"
 #include "Robot.h"
+#include "PriorityCalculation.h"
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -71,7 +72,13 @@ bool readMap() { // never test
 
 int main() {
     readMap();
+    
+    PriorityCalcu();
+
     puts("OK");
+
+    PutsPriorityLog();
+    //while更新状态，调用GetWorkOrder()
     fflush(stdout);
     int frameID;
     while (scanf("%d", &frameID) != EOF) {

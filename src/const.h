@@ -10,3 +10,4 @@ double maxRotate = M_PI;
 double minRotate = -M_PI;
 double maxForce = 250;
 double maxMomentForce = 50;
+fstream fout("status.log", ios::out);
