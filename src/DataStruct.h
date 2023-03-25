@@ -27,7 +27,7 @@ struct WorkStation {
     int status;
     int material;
     int production;
-    int gettingMutex;
+    int gettingMutex[7];
     int SellMutex;
 
     //新增变量
@@ -54,6 +54,10 @@ struct WorkStation {
         this->status = status;
         this->material = material;
         this->production = production;
+        this->SellMutex=1;
+        for(int i=1;i<7;i++){
+            this->gettingMutex[i]=1;
+        }
     }
 };
 
