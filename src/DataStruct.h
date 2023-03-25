@@ -1,3 +1,4 @@
+#pragma once
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <fstream>
@@ -59,6 +60,15 @@ struct WorkStation {
             this->gettingMutex[i]=1;
         }
     }
+
+    int update(int material, int production) {
+        this->material = material;
+        this->production = production;
+        return 0;
+    }
+
+    double getCoordX() { return this->x_pos; }
+    double getCoordY() { return this->y_pos; }
 };
 
 struct MaterialPrice {

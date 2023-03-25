@@ -1,7 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "DataStruct.h"
-#include "Robot.h"
-#include "const.h"
+#include "PriorityCalculation.h"
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -11,16 +9,17 @@
 #include <vector>
 using namespace std;
 
+char line[1024];
 int frameID;
 int money;
 int workStationNum;
-vector<WorkStation> workStation; // index [0,49]
 vector<Robot> robots;
-vector<int> workStation_type[10]; // index [1,9],只存ID
-vector<int> PriorityStation;
+vector<WorkStation> workStation; // index [0,49]
+
+deque<pair<int, int>> taskQueue; // first: from, second: to
+vector<queue<int>> sellQueue(8);
 
 bool readUntilOK() {
-    char line[1024];
     while (fgets(line, sizeof line, stdin)) {
         fout << line;
         if (line[0] == 'O' && line[1] == 'K') {
@@ -31,43 +30,52 @@ bool readUntilOK() {
     return false;
 }
 
-bool readMap() { // never test
-    char line[1024];
-    int x, y;
-    char c;
-    int id=1;
-    for (y = 100; y >= 0; y--) {
-        for (x = 0; x < 101; x++) {
-            cin >> c;
-            if (c >= '1' || c <= '9') {
-                workStation.push_back(WorkStation(c - '0',id++, x * 0.5 - 0.25,
-                                                  y * 0.5 - 0.25, -1, 0, 0));
-                workStation_type[c - '0'].push_back(workStation.size() -
-                                                    1); //最新一位的ID存入type
+bool updateStatus() {
+    // update money
+    scanf("%d", &money);
+    // update workStation
+    for (int i = 0; i < workStationNum; i++) {
+        int type, time, material, production;
+        double x, y;
+        scanf("%d%lf%lf%d%d%d", &type, &x, &y, &time, &material, &production);
+        workStation[i].update(material, production);
+        if (production == 1) {
+            if (!sellQueue[type].empty()) {
+                taskQueue.push_back(make_pair(i, sellQueue[type].front()));
+                sellQueue[type].pop();
             }
-            if (c == 'A') {
-                robots.push_back(Robot(x * 0.5 - 0.25, y * 0.5 - 0.25));
-            }
-            if (c == 'O') {
-                cin >> c;
-                if (c == 'K') {
-                    fout << "OK" << endl;
-                    return true;
-                }
-            }
-            fout << c;
         }
+    }
+    // update robots
+    for (int robotId = 0; robotId < 4; robotId++) {
+        int workStation, material;
+        double time, clash, vTheta, vX, vY, orient, x, y;
+        scanf("%d%d%lf%lf%lf%lf%lf%lf%lf%lf", &workStation, &material, &time,
+              &clash, &vTheta, &vX, &vY, &orient, &x, &y);
+        robots[robotId].update(workStation, material, time, clash, vTheta, vX,
+                               vY, orient, x, y);
+    }
+    fgets(line, sizeof(line), stdin);
+    if (line[0] == 'O' && line[1] == 'K') {
+        return true;
     }
     return false;
 }
 
 int main() {
-    readMap();
+    PriorityCalculation priorityCalculation(workStation, robots);
     puts("OK");
     fflush(stdout);
     int frameID;
     while (scanf("%d", &frameID) != EOF) {
-        readUntilOK();
+        updateStatus();
+        if (taskQueue.size() <= 20) {
+            vector<pair<int, int>> temp = priorityCalculation.getTask();
+            for (auto i : temp) {
+                sellQueue[i.first].push(i.second);
+            }
+        }
+
         printf("%d\n", frameID);
         int lineSpeed = 3;
         double angleSpeed = 1.5;
