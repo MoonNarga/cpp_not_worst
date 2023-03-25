@@ -14,11 +14,9 @@
 #define Frame7 1000
 using namespace std;
 
-// 会变成乱码吗
 class PriorityCalculation {
 
   private:
-    // all never test
     MaterialPrice materialPrice[8];   // begin from index 1
     vector<WorkStation> &workStation; // index [0,49]
     vector<int> workStation_type[10];
@@ -31,8 +29,6 @@ class PriorityCalculation {
         readMap(robots);
         PriorityCalcu();
     }
-    // all never test
-    MaterialPrice materialPrice[8]; // begin from index 1
 
     void initPrice() {
         materialPrice[1].buyPrice = 3000, materialPrice[1].sellPrice = 6000;

@@ -10,9 +10,6 @@
 using namespace std;
 
 char line[1024];
-void GetMaterial(int ID);
-int GetNearestID(int workStationID, int material);
-
 int frameID;
 int money;
 int workStationNum;
@@ -57,7 +54,6 @@ bool updateStatus() {
 int main() {
     PriorityCalculation priorityCalculation(workStation, robots);
     puts("OK");
-    // while更新状态，调用GetWorkOrder()
     fflush(stdout);
     int frameID;
     while (scanf("%d", &frameID) != EOF) {

@@ -7,8 +7,6 @@
 using namespace std;
 
 fstream fout("status.log", ios::out);
-stringstream ss;
-
 double emptyWeight = 0.45 * 0.45 * M_PI * 20;
 double loadingWeight = 0.53 * 0.53 * M_PI * 20;
 double maxSpeed = 6;
