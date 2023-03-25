@@ -10,6 +10,9 @@
 using namespace std;
 
 char line[1024];
+void GetMaterial(int ID);
+int GetNearestID(int workStationID, int material);
+
 int frameID;
 int money;
 int workStationNum;
@@ -18,17 +21,6 @@ vector<WorkStation> workStation; // index [0,49]
 
 deque<pair<int, int>> taskQueue; // first: from, second: to
 vector<queue<int>> sellQueue(8);
-
-bool readUntilOK() {
-    while (fgets(line, sizeof line, stdin)) {
-        fout << line;
-        if (line[0] == 'O' && line[1] == 'K') {
-            return true;
-        }
-        // do something
-    }
-    return false;
-}
 
 bool updateStatus() {
     // update money
@@ -65,15 +57,13 @@ bool updateStatus() {
 int main() {
     PriorityCalculation priorityCalculation(workStation, robots);
     puts("OK");
+    // while更新状态，调用GetWorkOrder()
     fflush(stdout);
     int frameID;
     while (scanf("%d", &frameID) != EOF) {
         updateStatus();
         if (taskQueue.size() <= 20) {
-            vector<pair<int, int>> temp = priorityCalculation.getTask();
-            for (auto i : temp) {
-                sellQueue[i.first].push(i.second);
-            }
+            priorityCalculation.getTask(sellQueue);
         }
 
         printf("%d\n", frameID);

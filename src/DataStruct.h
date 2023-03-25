@@ -28,8 +28,7 @@ struct WorkStation {
     int status;
     int material;
     int production;
-    int gettingMutex[7];
-    int SellMutex;
+    int cntMutex;
 
     //新增变量
     //对于1-3 material全0
@@ -46,19 +45,19 @@ struct WorkStation {
     double pathProfitRate; //总线路利润率
 
   public:
-    WorkStation(int type, int ID,double x_pos, double y_pos, int status, int material,
-                int prduction) {
+    WorkStation(int type, int ID, double x_pos, double y_pos, int status,
+                int material, int prduction) {
         this->type = type;
-        this->ID=ID;
+        this->ID = ID;
         this->x_pos = x_pos;
         this->y_pos = y_pos;
         this->status = status;
         this->material = material;
         this->production = production;
-        this->SellMutex=1;
-        for(int i=1;i<7;i++){
-            this->gettingMutex[i]=1;
-        }
+        this->cntMutex = 2;
+        this->materialFrame = 0;
+        this->productFrame = 0;
+        this->pathProfit = 0;
     }
 
     int update(int material, int production) {

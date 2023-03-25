@@ -3,6 +3,7 @@
         "algorithm": "cpp",
         "fstream": "cpp",
         "iosfwd": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "queue": "cpp"
     }
 }
