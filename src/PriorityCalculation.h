@@ -268,14 +268,17 @@ void PriorityCalcu() {
     }
 }
 
-void SellOrder(int ID) { // ？
+pair<int,int> SellOrder(int ID) { // ？
 
-    SellBeha.push(Behaviour(SELL, ID));
+    return pair<int, int>{SELL,ID};
 }
 
-void PickOrder(int fromID, int toID) {
-    PickBeha.push(Behaviour(BUY, fromID));
-    PickBeha.push(Behaviour(SELL, toID));
+pair<int,int> PickOrder(int fromID, int toID) {
+
+        return pair<int, int>{BUY, fromID};
+        return pair<int, int>{BUY, fromID};
+    // PickBeha.push(Behaviour(BUY, fromID));
+    // PickBeha.push(Behaviour(SELL, toID));
 }
 
 void GetOrProduct(int toID, int fromID, int material_type) {
