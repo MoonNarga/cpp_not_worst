@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "DataStruct.h"
 #include "Robot.h"
+#include "const.h"
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -10,22 +11,13 @@
 #include <vector>
 using namespace std;
 
-// fstream fout("status.log", ios::out);
-// stringstream ss;
-// extern vector<Robot>robot;
-//
-////vector<WorkStation> priority_workStation;
-//
-// queue<RobotOrder> orderQueue[4];
-// int frameID;
-// int money;
-// extern int workStationNum;
-
+int frameID;
+int money;
+int workStationNum;
 vector<WorkStation> workStation; // index [0,49]
 vector<Robot> robots;
 vector<int> workStation_type[10]; // index [1,9],只存ID
 vector<int> PriorityStation;
-
 
 bool readUntilOK() {
     char line[1024];

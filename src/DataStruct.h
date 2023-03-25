@@ -72,16 +72,3 @@ struct MaterialPrice {
         this->sellPrice = sellPrice;
     }
 };
-
-fstream fout("status.log", ios::out);
-stringstream ss;
-extern vector<WorkStation> workStation; // index [0,49]
-vector<int> PriorityStation;
-
-
-// vector<WorkStation> priority_workStation;
-extern vector<int> workStation_type[10]; // index [1,9],只存ID
-
-int frameID;
-int money;
-extern int workStationNum;
