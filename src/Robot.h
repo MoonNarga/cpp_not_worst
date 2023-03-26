@@ -1,4 +1,6 @@
 #pragma once
+#include "DataStruct.h"
+#include "const.h"
 #include <cmath>
 #include <deque>
 #include <iostream>
@@ -38,26 +40,34 @@ class Robot {
         double theta = atan2(y, x);
         double thetaDiff = theta - orient;
 
-        if (thetaDiff > 0) {
-            vTheta = -M_PI;
-        } else if (thetaDiff < 0) {
-            vTheta = M_PI;
+        if (thetaDiff > M_PI) {
+            vTheta = -M_PI * (abs(thetaDiff) / M_PI);
+        } else if (thetaDiff <= M_PI && thetaDiff > 0) {
+            vTheta = M_PI * (abs(thetaDiff) / M_PI);
+        } else if (thetaDiff > -M_PI && thetaDiff <= 0) {
+            vTheta = -M_PI * (abs(thetaDiff) / M_PI);
+        } else {
+            vTheta = M_PI * (abs(thetaDiff) / M_PI);
         }
-        if (thetaDiff > M_PI_2 || thetaDiff < -M_PI_2) {
+        if (thetaDiff > M_PI_4 || thetaDiff < -M_PI_4) {
             vForward = 0;
         } else {
-            vForward = 6;
+            if (sqrt(x * x + y * y) > 1.5) {
+                vForward = 6;
+            } else {
+                vForward = 1;
+            }
         }
     }
 
     int update(int workStation, int material, double time, double clash,
-               double vTheta, double vX, double vY, double orient, double x,
+               double vT, double vX, double vY, double orient, double x,
                double y) {
         this->workStation = workStation;
         this->materialCarry = material;
         this->time = time;
         this->clash = clash;
-        this->vTheta = vTheta;
+        this->vTheta = vT;
         this->vX = vX;
         this->vY = vY;
         this->orient = orient;
@@ -66,14 +76,20 @@ class Robot {
         if (workStation == currentTask.front().first) {
             if (currentTask.front().second == BUY) {
                 printf("buy %d\n", id);
+                ++workStations[workStation].cntMutex;
             } else if (currentTask.front().second == SELL) {
                 printf("sell %d\n", id);
             }
             currentTask.pop_front();
         }
+        if (!currentTask.empty()) {
+            setTarget(currentTask.front().first);
+        }
         calculateV();
         printf("rotate %d %lf\n", id, vTheta);
+        fout << "rotate " << id << " " << vTheta << endl;
         printf("forward %d %lf\n", id, vForward);
+        fout << "forward " << id << " " << vForward << endl;
         return 0;
     }
 
@@ -85,9 +101,13 @@ class Robot {
     int numTask() { return currentTask.size(); }
 
     int getTask(deque<pair<int, int>> &taskQueue) {
-        currentTask.push_back(make_pair(taskQueue.front().first, BUY));
-        currentTask.push_back(make_pair(taskQueue.front().second, SELL));
-        taskQueue.pop_front();
+        if (!taskQueue.empty()) {
+            fout << "get task" << id << " " << taskQueue.front().first << " "
+                 << taskQueue.front().second << endl;
+            currentTask.push_back(make_pair(taskQueue.front().first, BUY));
+            currentTask.push_back(make_pair(taskQueue.front().second, SELL));
+            taskQueue.pop_front();
+        }
         return 0;
     }
 };

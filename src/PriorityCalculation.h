@@ -378,27 +378,33 @@ class PriorityCalculation {
         }
     }
 
-    void addTask(int stationID, vector<queue<int>> &sellQueue) {
-        for (int i = 1; i <= 3; ++i) {
+    void addTask(int stationID, vector<queue<int>> &sellQueue, int recur) {
+        for (int i = 1; i <= 3 && i < workStation[stationID].type; ++i) {
             if (workStation[stationID].material_vector[i].size() > 0) {
                 sellQueue[i].push(stationID);
             }
         }
-        for (int i = 4; i <= 7; ++i) {
+        for (int i = 4; i <= 7 && i < workStation[stationID].type; ++i) {
             if (workStation[stationID].material_vector[i].size() > 0) {
                 sellQueue[i].push(stationID);
                 addTask(workStation[stationID].material_vector[i][0].directID,
-                        sellQueue);
+                        sellQueue, 0);
             }
+        }
+        if (recur == 1) {
+            sellQueue[workStation[stationID].type].push(
+                workStation[stationID]
+                    .material_vector[workStation[stationID].type][0]
+                    .directID);
         }
     }
 
     void getTask(vector<queue<int>> &sellQueue) {
         for (int i = 0; i < PriorityStation.size(); ++i) {
             int ID = PriorityStation[i];
-            if (workStation[ID].production && workStation[ID].cntMutex > 0) {
-                addTask(ID, sellQueue);
-                workStation[ID].cntMutex--;
+            if (workStation[ID].cntMutex > 0) {
+                addTask(ID, sellQueue, 1);
+                --workStation[ID].cntMutex;
                 return;
             }
         }

@@ -29,6 +29,7 @@ struct WorkStation {
     int material;
     int production;
     int cntMutex;
+    int preStatus;
 
     //新增变量
     //对于1-3 material全0
@@ -58,10 +59,12 @@ struct WorkStation {
         this->materialFrame = 0;
         this->productFrame = 0;
         this->pathProfit = 0;
+        this->preStatus = 0;
     }
 
     int update(int material, int production) {
         this->material = material;
+        this->preStatus = this->production;
         this->production = production;
         return 0;
     }
