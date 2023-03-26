@@ -22,6 +22,9 @@ vector<queue<int>> sellQueue(8);
 bool updateStatus() {
     // update money
     scanf("%d", &money);
+    scanf("%d", &workStationNum);
+    fout << money << endl;
+    fout << workStationNum << endl;
     // update workStation
     for (int i = 0; i < workStationNum; i++) {
         int type, time, material, production;
@@ -46,14 +49,13 @@ bool updateStatus() {
     }
     fgets(line, sizeof(line), stdin);
     if (line[0] == 'O' && line[1] == 'K') {
+        fout << line;
         return true;
     }
     return false;
 }
 
-int dispatch() {
-    
-}
+int dispatch() {}
 
 int main() {
     PriorityCalculation priorityCalculation(workStation, robots);
@@ -61,6 +63,7 @@ int main() {
     fflush(stdout);
     int frameID;
     while (scanf("%d", &frameID) != EOF) {
+        fout << frameID << " ";
         updateStatus();
         printf("%d\n", frameID);
         // if (taskQueue.size() <= 20) {
