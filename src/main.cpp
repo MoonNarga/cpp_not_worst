@@ -27,13 +27,13 @@ bool updateStatus() {
         int type, time, material, production;
         double x, y;
         scanf("%d%lf%lf%d%d%d", &type, &x, &y, &time, &material, &production);
-        workStation[i].update(material, production);
-        if (production == 1) {
-            if (!sellQueue[type].empty()) {
-                taskQueue.push_back(make_pair(i, sellQueue[type].front()));
-                sellQueue[type].pop();
-            }
-        }
+        // workStation[i].update(material, production);
+        // if (production == 1) {
+        //     if (!sellQueue[type].empty()) {
+        //         taskQueue.push_back(make_pair(i, sellQueue[type].front()));
+        //         sellQueue[type].pop();
+        //     }
+        // }
     }
     // update robots
     for (int robotId = 0; robotId < 4; robotId++) {
@@ -41,14 +41,18 @@ bool updateStatus() {
         double time, clash, vTheta, vX, vY, orient, x, y;
         scanf("%d%d%lf%lf%lf%lf%lf%lf%lf%lf", &workStation, &material, &time,
               &clash, &vTheta, &vX, &vY, &orient, &x, &y);
-        robots[robotId].update(workStation, material, time, clash, vTheta, vX,
-                               vY, orient, x, y);
+        // robots[robotId].update(workStation, material, time, clash, vTheta, vX,
+        //                        vY, orient, x, y);
     }
     fgets(line, sizeof(line), stdin);
     if (line[0] == 'O' && line[1] == 'K') {
         return true;
     }
     return false;
+}
+
+int dispatch() {
+    
 }
 
 int main() {
@@ -58,18 +62,18 @@ int main() {
     int frameID;
     while (scanf("%d", &frameID) != EOF) {
         updateStatus();
-        if (taskQueue.size() <= 20) {
-            priorityCalculation.getTask(sellQueue);
-        }
-
         printf("%d\n", frameID);
+        // if (taskQueue.size() <= 20) {
+        //     priorityCalculation.getTask(sellQueue);
+        // }
+        // dispatch();
+
         int lineSpeed = 3;
         double angleSpeed = 1.5;
         for (int robotId = 0; robotId < 4; robotId++) {
             printf("forward %d %d\n", robotId, lineSpeed);
             printf("rotate %d %f\n", robotId, angleSpeed);
         }
-        // printf("OK\n", frameID);
         printf("OK\n");
         fflush(stdout);
     }

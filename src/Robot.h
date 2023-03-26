@@ -4,6 +4,9 @@
 #include <iostream>
 #include <pthread.h>
 #include <string>
+#define BUY 1
+#define SELL 2
+#define MOVE 3
 
 using namespace std;
 
@@ -16,6 +19,7 @@ class Robot {
     double coordX, coordY;
     int targetID = -1;
     vector<WorkStation> &workStations; // index [0,49]
+    deque<pair<int, int>> currentTask; // first: to, second: op
 
   public:
     Robot(int id, int x, int y, vector<WorkStation> &WS) : workStations(WS) {
@@ -24,7 +28,7 @@ class Robot {
         coordY = y;
     }
 
-    void calculateVTheta() {
+    void calculateV() {
         if (targetID == -1) {
             vTheta = 0;
             return;
@@ -32,26 +36,18 @@ class Robot {
         double x = workStations[targetID].getCoordX() - coordX;
         double y = workStations[targetID].getCoordY() - coordY;
         double theta = atan2(y, x);
-        vTheta = theta - orient;
-        if (vTheta > M_PI) {
-            vTheta -= 2 * M_PI;
-        } else if (vTheta < -M_PI) {
-            vTheta += 2 * M_PI;
-        }
-    }
+        double thetaDiff = theta - orient;
 
-    void calculateV() {
-        if (targetID == -1) {
-            vX = 0;
-            vY = 0;
-            return;
+        if (thetaDiff > 0) {
+            vTheta = -M_PI;
+        } else if (thetaDiff < 0) {
+            vTheta = M_PI;
         }
-        double x = workStations[targetID].getCoordX() - coordX;
-        double y = workStations[targetID].getCoordY() - coordY;
-        double theta = atan2(y, x);
-        double v = sqrt(x * x + y * y);
-        vX = v * cos(theta);
-        vY = v * sin(theta);
+        if (thetaDiff > M_PI_2 || thetaDiff < -M_PI_2) {
+            vForward = 0;
+        } else {
+            vForward = 6;
+        }
     }
 
     int update(int workStation, int material, double time, double clash,
@@ -67,11 +63,31 @@ class Robot {
         this->orient = orient;
         this->coordX = x;
         this->coordY = y;
+        if (workStation == currentTask.front().first) {
+            if (currentTask.front().second == BUY) {
+                printf("buy %d\n", id);
+            } else if (currentTask.front().second == SELL) {
+                printf("sell %d\n", id);
+            }
+            currentTask.pop_front();
+        }
+        calculateV();
+        printf("rotate %d %lf\n", id, vTheta);
+        printf("forward %d %lf\n", id, vForward);
         return 0;
     }
 
     int setTarget(int targetID) {
         this->targetID = targetID;
+        return 0;
+    }
+
+    int numTask() { return currentTask.size(); }
+
+    int getTask(deque<pair<int, int>> &taskQueue) {
+        currentTask.push_back(make_pair(taskQueue.front().first, BUY));
+        currentTask.push_back(make_pair(taskQueue.front().second, SELL));
+        taskQueue.pop_front();
         return 0;
     }
 };

@@ -47,29 +47,25 @@ class PriorityCalculation {
     bool readMap(vector<Robot> &robots) { // never test
         int x, y;
         char c;
-        int id = 1;
+        int id = 0;
         for (y = 100; y >= 0; y--) {
             for (x = 0; x < 101; x++) {
                 c = getchar();
-                if (c >= '1' || c <= '9') {
-                    workStation.push_back(
-                        WorkStation(c - '0', id++, x * 0.5 - 0.25,
-                                    y * 0.5 - 0.25, -1, 0, 0));
-                    workStation_type[c - '0'].push_back(
-                        workStation.size() - 1); //最新一位的ID存入type
-                }
-                if (c == 'A') {
-                    robots.push_back(Robot(robots.size(), x * 0.5 - 0.25,
+                if (c >= '1' && c <= '9') {
+                    workStation.push_back(WorkStation(
+                        c - '0', id, x * 0.5 + 0.25, y * 0.5 - 0.25, -1, 0, 0));
+                    workStation_type[c - '0'].push_back(id++);
+                } else if (c == 'A') {
+                    robots.push_back(Robot(robots.size(), x * 0.5 + 0.25,
                                            y * 0.5 - 0.25, workStation));
-                }
-                if (c == 'O') {
+                } else if (c == 'O') {
                     c = getchar();
                     if (c == 'K') {
                         fout << "OK" << endl;
                         return true;
                     }
                 }
-                fout << c;
+                // fout << c;
             }
         }
         return false;
